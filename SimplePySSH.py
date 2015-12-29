@@ -103,4 +103,5 @@ if __name__ == "__main__":
     user = raw_input("Enter target username: ")
     passwd = getpass.getpass()
     cmd = raw_input("Enter the command you wish to run on remote machine: ")
-    ssh_cmd(ip, user, passwd, cmd)
+    out = ssh_cmd(ip, user, passwd, cmd)
+    print out
