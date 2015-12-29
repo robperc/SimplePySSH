@@ -66,7 +66,6 @@ class SSH:
             if m:
                 raise Exception("Invalid passwd")
             # passwd was accepted
-            m = re.search("Warning: Permanently added", tmp)
             got = tmp
         while got and len(got) > 0:
             output += got
