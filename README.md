@@ -21,12 +21,12 @@ Running the module as a standalone script results in the following:
 $ ./SimplePySSH.py 
 Enter ip address of target machine: NotAnIpAddress
 NotAnIpAddress does not appear to be a valid ip address.
-Enter ip address of target machine: 127.0.0.1
+Enter ip address of target machine: 192.168.0.100
 Enter target username: SomeUser
 Password: 
-Enter the command you wish to run on remote machine: ifconfig | grep 127.0.0.1
+Enter the command you wish to run on remote machine: ifconfig | grep 192.168.0.100
 
-	inet 127.0.0.1 netmask 0xff000000
+	inet 192.168.0.100 netmask 0xffffff00 broadcast 192.168.0.255
 
 $
 ```
