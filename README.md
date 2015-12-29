@@ -24,9 +24,9 @@ NotAnIpAddress does not appear to be a valid ip address.
 Enter ip address of target machine: 127.0.0.1
 Enter target username: SomeUser
 Password: 
-Enter the command you wish to run on remote machine: whoami
+Enter the command you wish to run on remote machine: ifconfig | grep 127.0.0.1
 
-SomeUser
+	inet 127.0.0.1 netmask 0xff000000
 
 $
 ```
