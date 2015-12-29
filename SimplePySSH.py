@@ -55,18 +55,19 @@ class SSH:
             tmp = self._read(f)
             tmp += self._read(f)
             got = tmp
-        m = re.search("Password:", got)
-        if m:
-            # send passwd
-            os.write(f, self.passwd + '\n')
-            # read two lines
-            tmp = self._read(f)
-            tmp += self._read(f)
-            m = re.search("Permission denied", tmp)
+        for tries in range(3):
+            m = re.search("Password:", got)
             if m:
-                raise Exception("Invalid passwd")
-            # passwd was accepted
-            got = tmp
+                # send passwd
+                os.write(f, self.passwd + '\n')
+                # read two lines
+                tmp = self._read(f)
+                tmp += self._read(f)
+                m = re.search("Permission denied", tmp)
+                if m:
+                    raise Exception("Invalid username or passwd")
+                # passwd was accepted
+                got = tmp
         while got and len(got) > 0:
             output += got
             got = self._read(f)
