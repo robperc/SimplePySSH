@@ -15,3 +15,18 @@ x = SSH("x.x.x.x", "someuser", somepassword"")
 result1 = x.cmd("ifconfig")
 result2 = x.cmd("whoami")
 ```
+
+Running the module as a standalone script results in the following:
+```
+$ ./SimplePySSH.py 
+Enter ip address of target machine: NotAnIpAddress
+NotAnIpAddress does not appear to be a valid ip address.
+Enter ip address of target machine: 127.0.0.1
+Enter target username: SomeUser
+Password: 
+Enter the command you wish to run on remote machine: whoami
+
+SomeUser
+
+$
+```
