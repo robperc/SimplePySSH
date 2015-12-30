@@ -102,6 +102,10 @@ if __name__ == "__main__":
     ip = get_ip()
     user = raw_input("Enter target username: ")
     passwd = getpass.getpass()
-    cmd = raw_input("Enter the command you wish to run on remote machine: ")
-    out = ssh_cmd(ip, user, passwd, cmd)
-    print out
+    ssh = SSH(ip, user, passwd)
+    while True:
+        cmd = raw_input("Enter the command you wish to run on remote machine: ")
+        if cmd == "exit()":
+            break
+        result = ssh.cmd(cmd)
+        print result
