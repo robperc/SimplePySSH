@@ -11,7 +11,7 @@ If you are importing the module it can be used as follows:
 ```
 import SimplePySSH
 
-x = SSH("x.x.x.x", "someuser", somepassword"")
+x = SSH("192.168.0.100", "SomeUser", "SomePassword")
 result1 = x.cmd("ifconfig")
 result2 = x.cmd("whoami")
 ```
