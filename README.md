@@ -28,5 +28,14 @@ Enter the command you wish to run on remote machine: ifconfig | grep 192.168.0.1
 
 	inet 192.168.0.100 netmask 0xffffff00 broadcast 192.168.0.255
 
+Enter the command you wish to run on remote machine: whoami
+
+	SomeUser
+
+Enter the command you wish to run on remote machine: echo $TERM
+
+	dumb
+
+Enter the command you wish to run on remote machine: exit()
 $
 ```
