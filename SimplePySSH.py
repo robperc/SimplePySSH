@@ -101,7 +101,7 @@ def get_ip():
 if __name__ == "__main__":
     ip = get_ip()
     user = raw_input("Enter target username: ")
-    passwd = getpass.getpass()
+    passwd = getpass.getpass(prompt="Enter the password for the target user: ")
     ssh = SSH(ip, user, passwd)
     while True:
         cmd = raw_input("Enter the command you wish to run on remote machine: ")
