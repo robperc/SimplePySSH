@@ -74,5 +74,5 @@ Enter the command you wish to run on remote machine: exit()
 Remove ssh-key authorization with remote machine? (y/n): y
 $
 ```
-Typing 'y' to the 'Remove ssh-key authorization...' prompt will remove all instances of your public key
+Entering 'y' at the 'Remove ssh-key authorization...' prompt will remove all instances of your public key
 from the remote machines authorized_hosts.
