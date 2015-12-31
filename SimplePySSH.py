@@ -29,10 +29,6 @@ class SSH:
         (pid, f) = pty.fork()
         if pid == 0:
             os.execlp("/usr/bin/ssh", "ssh",
-                "-oServerAliveInterval=5",
-                "-oServerAliveCountMax=1",
-                "-oStrictHostKeyChecking=no", 
-                "-oCheckHostIP=no",
                 "-t", self.user + '@' + self.ip, c)
         else:
             return (pid, f)
@@ -49,6 +45,16 @@ class SSH:
     def ssh_results(self, pid, f):
         output = ""
         got = self._read(f)
+        m = re.search("authenticity of host", got)
+        if m:
+            os.write(f, 'yes\n') 
+            # Read until we get ack
+            while True:
+                got = self._read(f)
+                m = re.search("Permanently added", got)
+                if m:
+                    break
+            got = self._read(f)         # check for passwd request
         m = re.search("Warning:", got)
         if m:
             os.write(f, '\n')
