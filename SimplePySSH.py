@@ -189,7 +189,7 @@ if __name__ == "__main__":
     user = raw_input("Enter target username: ")
     passwd = getpass.getpass(prompt="Enter the password for the target user: ")
     ssh = SSH(ip, user, passwd)
-    key_auth = get_bool_yes_no(prompt="Configure ssh-key authorization with remote machine? (y/n): ")
+    key_auth = get_bool_yes_no(prompt="Configure key-based authorization with remote machine? (y/n): ")
     if key_auth:
         ssh.set_key_auth(local_user, "add")
     while True:
@@ -198,7 +198,7 @@ if __name__ == "__main__":
             break
         result = ssh.cmd(cmd)
         print result
-    key_auth = get_bool_yes_no(prompt="Remove ssh-key authorization with remote machine? (y/n): ")
+    key_auth = get_bool_yes_no(prompt="Remove key-based authorization with remote machine? (y/n): ")
     if key_auth:
         ssh.set_key_auth(local_user, "remove")
 
