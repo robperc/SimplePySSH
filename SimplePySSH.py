@@ -33,7 +33,7 @@ class SSH:
                 "-oServerAliveCountMax=1",
                 "-oStrictHostKeyChecking=no", 
                 "-oCheckHostIP=no",
-                self.user + '@' + self.ip, c)
+                "-t", self.user + '@' + self.ip, c)
         else:
             return (pid, f)
 
