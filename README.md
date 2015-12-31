@@ -23,7 +23,8 @@ Enter ip address of target machine: NotAnIpAddress
 NotAnIpAddress does not appear to be a valid ip address.
 Enter ip address of target machine: 192.168.0.100
 Enter target username: SomeUser
-Password: 
+Enter the password for the target user:
+Configure ssh-key authorization with remote machine? (y/n): y 
 Enter the command you wish to run on remote machine: ifconfig | grep 192.168.0.100
 
 	inet 192.168.0.100 netmask 0xffffff00 broadcast 192.168.0.255
@@ -37,5 +38,23 @@ Enter the command you wish to run on remote machine: echo $TERM
 	dumb
 
 Enter the command you wish to run on remote machine: exit()
+Remove ssh-key authorization with remote machine? (y/n): n
 $
 ```
+Now that I have added my public key to the remote machines authorized_keys I can ssh in 
+without the need for a password (although the prompt for the password will still appear).
+```
+$ ./SimplePySSH.py
+Enter ip address of target machine: 192.168.0.100
+Enter target username: root
+Configure ssh-key authorization with remote machine? (y/n): n
+Enter the command you wish to run on remote machine: whoami
+
+	root
+
+Enter the command you wish to run on remote machine: exit()
+Remove ssh-key authorization with remote machine? (y/n): y
+$
+```
+Typing 'y' to the 'Remove ssh-key authorization...' prompt will remove all instances of your public key
+from the remote machines authorized_hosts.
