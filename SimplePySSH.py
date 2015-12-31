@@ -103,9 +103,11 @@ class SSH:
         auth_keys = ssh_dir + "/authorized_keys"
         pub_key = ssh_keygen(user)
         contents = self.get_auth_keys(ssh_dir, auth_keys)
-        if not pub_key in contents:
-            print "writing to auth_keys"
-            self.write_auth_key(pub_key, auth_keys)
+        # if not pub_key in contents:
+        #     self.write_auth_key(pub_key, auth_keys)
+        print pub_key in contents
+        if pub_key in contents:
+            self.remove_auth_key(pub_key, contents, auth_keys)
 
     def get_auth_keys(self, ssh_dir, auth_keys):
         cmd = "sudo ls %s" % auth_keys
@@ -121,6 +123,13 @@ class SSH:
 
     def write_auth_key(self, pub_key, auth_keys):
         cmd = "sudo echo \"%s\" | sudo tee -a %s" % (pub_key, auth_keys)
+        self.cmd(cmd)
+
+    def remove_auth_key(self, pub_key, contents, auth_keys):
+        contents = [key for key in contents.replace('\r', '').split('\n') if key not in ('', pub_key)]
+        contents = '\n'.join(contents)
+        print pub_key in contents
+        cmd = "sudo echo \"%s\" | sudo tee %s" % (contents, auth_keys)
         self.cmd(cmd)
 
 def ssh_cmd(ip, user, passwd, cmd):
