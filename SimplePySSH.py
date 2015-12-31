@@ -102,12 +102,24 @@ class SSH:
             raise ValueError('Unsupported OS on remote machine: %s' % RemoteOS)
         auth_keys = ssh_dir + "/authorized_keys"
         pub_key = ssh_keygen(user)
-        cmd = "sudo mkdir -p %s" % ssh_dir
-        self.cmd(cmd)
-        cmd = "sudo touch %s" % auth_keys
-        self.cmd(cmd)
-        cmd = "sudo echo \"%s\" | sudo tee -a %s" % (pub_key, auth_keys)
-        self.cmd(cmd)
+        contents = self.get_auth_keys(ssh_dir, auth_keys)
+        print contents
+        # self.cmd(cmd)
+        # cmd = "sudo echo \"%s\" | sudo tee -a %s" % (pub_key, auth_keys)
+
+    def get_auth_keys(self, ssh_dir, auth_keys):
+        cmd = "sudo ls %s" % auth_keys
+        out = self.cmd(cmd)
+        m = re.search("such file or directory", out)
+        if m:
+            cmd = "sudo mkdir -p %s" % ssh_dir
+            self.cmd(cmd)
+            cmd = "sudo touch %s" % auth_keys
+            self.cmd(cmd)
+        cmd = "sudo cat %s" % auth_keys
+        return self.cmd(cmd)
+
+    # def write_auth_keys():
 
 def ssh_cmd(ip, user, passwd, cmd):
     s = SSH(ip, user, passwd)
