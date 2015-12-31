@@ -24,7 +24,7 @@ ssh.set_key_auth("YourLocalUsername", "add")
 # can now ssh as root without password
 rootssh = SSH("192.168.0.100", "root", "")
 # result4 === "root"
-result4 = self.cmd("whoami")
+result4 = rootssh.cmd("whoami")
 # remove all instances of public key from remote machines authorized_keys
 ssh.set_key_auth("YourLocalUsername", "remove")
 
