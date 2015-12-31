@@ -33,6 +33,10 @@ Enter the command you wish to run on remote machine: whoami
 
 	SomeUser
 
+Enter the command you wish to run on remote machine: sudo whoami
+
+	root
+
 Enter the command you wish to run on remote machine: echo $TERM
 
 	dumb
@@ -41,7 +45,7 @@ Enter the command you wish to run on remote machine: exit()
 Remove ssh-key authorization with remote machine? (y/n): n
 $
 ```
-Now that I have added my public key to the remote machines authorized_keys I can ssh in 
+Now that you have added your public key to the remote machines authorized_keys you can ssh in 
 without the need for a password (although the prompt for the password will still appear).
 ```
 $ ./SimplePySSH.py
