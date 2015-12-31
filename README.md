@@ -11,9 +11,22 @@ If you are importing the module it can be used as follows:
 ```
 import SimplePySSH
 
-x = SSH("192.168.0.100", "SomeUser", "SomePassword")
-result1 = x.cmd("ifconfig")
-result2 = x.cmd("whoami")
+ssh = SSH("192.168.0.100", "SomeUser", "SomePassword")
+# result1 === "inet 192.168.0.100 netmask 0xffffff00 broadcast 192.168.0.255"
+result1 = ssh.cmd("ifconfig | grep 192.168.0.100")
+# result2 === "SomeUser"
+result2 = ssh.cmd("whoami")
+# result3 === "root"
+result3 = ssh.cmd("sudo whoami")
+# setup key authorization
+ssh.set_key_auth("YourLocalUsername", "add")
+# can now ssh as root without password
+rootssh = SSH("192.168.0.100", "root", "")
+# result4 === "root"
+result4 = self.cmd("whoami")
+# remove all instances of public key from remote machines authorized_keys
+ssh.set_key_auth("YourLocalUsername", "remove")
+
 ```
 
 Running the module as a standalone script results in the following:
