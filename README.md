@@ -75,4 +75,4 @@ Remove ssh-key authorization with remote machine? (y/n): y
 $
 ```
 Entering 'y' at the 'Remove ssh-key authorization...' prompt will remove all instances of your public key
-from the remote machines authorized_hosts.
+from the remote machines authorized_keys.
