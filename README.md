@@ -19,7 +19,7 @@ result1 = ssh.cmd("ifconfig | grep 192.168.0.100")
 result2 = ssh.cmd("whoami")
 # result3 === "root"
 result3 = ssh.cmd("sudo whoami")
-# setup key authorization
+# write public key to authorized_keys of remote machine
 ssh.set_key_auth("YourLocalUsername", "add")
 # can now ssh as root without password
 rootssh = SSH("192.168.0.100", "root", "")
