@@ -103,9 +103,9 @@ class SSH:
         auth_keys = ssh_dir + "/authorized_keys"
         pub_key = ssh_keygen(user)
         contents = self.get_auth_keys(ssh_dir, auth_keys)
-        print contents
-        # self.cmd(cmd)
-        # cmd = "sudo echo \"%s\" | sudo tee -a %s" % (pub_key, auth_keys)
+        if not pub_key in contents:
+            print "writing to auth_keys"
+            self.write_auth_key(pub_key, auth_keys)
 
     def get_auth_keys(self, ssh_dir, auth_keys):
         cmd = "sudo ls %s" % auth_keys
@@ -119,7 +119,9 @@ class SSH:
         cmd = "sudo cat %s" % auth_keys
         return self.cmd(cmd)
 
-    # def write_auth_keys():
+    def write_auth_key(self, pub_key, auth_keys):
+        cmd = "sudo echo \"%s\" | sudo tee -a %s" % (pub_key, auth_keys)
+        self.cmd(cmd)
 
 def ssh_cmd(ip, user, passwd, cmd):
     s = SSH(ip, user, passwd)
@@ -168,7 +170,7 @@ if __name__ == "__main__":
     user = raw_input("Enter target username: ")
     passwd = getpass.getpass(prompt="Enter the password for the target user: ")
     ssh = SSH(ip, user, passwd)
-    #ssh.set_key_auth(local_user)
+    ssh.set_key_auth(local_user)
     while True:
         cmd = raw_input("Enter the command you wish to run on remote machine: ")
         if cmd == "exit()":
