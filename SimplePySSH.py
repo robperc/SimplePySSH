@@ -43,10 +43,11 @@ class SSH:
         x = ""
         try:
             x = os.read(f, 1024)
+
         except Exception, e:
             # this always fails with io error
             pass
-        return x
+        return x if not x.strip().startswith("Connection to") else ''
 
     def ssh_results(self, pid, f):
         output = ""
