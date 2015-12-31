@@ -196,6 +196,8 @@ if __name__ == "__main__":
         cmd = raw_input("Enter the command you wish to run on remote machine: ")
         if cmd == "exit()":
             break
+        elif cmd == '':
+            continue
         result = ssh.cmd(cmd)
         print result
     key_auth = get_bool_yes_no(prompt="Remove key-based authentication with remote machine? (y/n): ")
