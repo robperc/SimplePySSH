@@ -92,7 +92,7 @@ class SSH:
         (pid, f) = self.run_cmd(c)
         return self.ssh_results(pid, f)
 
-    def set_key_auth(self, user):
+    def set_key_auth(self, user, option):
         RemoteOS = self.cmd("uname").strip()
         if RemoteOS == 'Darwin':
             ssh_dir = "/private/var/root/.ssh"
@@ -103,10 +103,9 @@ class SSH:
         auth_keys = ssh_dir + "/authorized_keys"
         pub_key = ssh_keygen(user)
         contents = self.get_auth_keys(ssh_dir, auth_keys)
-        # if not pub_key in contents:
-        #     self.write_auth_key(pub_key, auth_keys)
-        print pub_key in contents
-        if pub_key in contents:
+        if option == 'add' and not pub_key in contents:
+            self.write_auth_key(pub_key, auth_keys)
+        if option == 'remove' and pub_key in contents:
             self.remove_auth_key(pub_key, contents, auth_keys)
 
     def get_auth_keys(self, ssh_dir, auth_keys):
@@ -128,7 +127,6 @@ class SSH:
     def remove_auth_key(self, pub_key, contents, auth_keys):
         contents = [key for key in contents.replace('\r', '').split('\n') if key not in ('', pub_key)]
         contents = '\n'.join(contents)
-        print pub_key in contents
         cmd = "sudo echo \"%s\" | sudo tee %s" % (contents, auth_keys)
         self.cmd(cmd)
 
@@ -172,6 +170,18 @@ def ssh_keygen(user):
         pub_key = subprocess.check_output(["ssh-keygen", "-t", "rsa", "-N", '', "-f", id_rsa]).strip()
     return pub_key
 
+def get_bool_yes_no(prompt):
+    yes = set(['yes','y', 'ye', ''])
+    no = set(['no','n'])
+    choice = raw_input(prompt).lower()
+    if choice in yes:
+        return True
+    elif choice in no:
+        return False
+    else:
+        print "Please enter yes or no"
+        get_yes_no(prompt)
+
 
 if __name__ == "__main__":
     local_user = get_local_user()
@@ -179,10 +189,16 @@ if __name__ == "__main__":
     user = raw_input("Enter target username: ")
     passwd = getpass.getpass(prompt="Enter the password for the target user: ")
     ssh = SSH(ip, user, passwd)
-    ssh.set_key_auth(local_user)
+    key_auth = get_bool_yes_no(prompt="Configure ssh-key authorization with remote machine? (y/n): ")
+    if key_auth:
+        ssh.set_key_auth(local_user, "add")
     while True:
         cmd = raw_input("Enter the command you wish to run on remote machine: ")
         if cmd == "exit()":
             break
         result = ssh.cmd(cmd)
         print result
+    key_auth = get_bool_yes_no(prompt="Remove ssh-key authorization with remote machine? (y/n): ")
+    if key_auth:
+        ssh.set_key_auth(local_user, "remove")
+
