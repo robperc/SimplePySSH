@@ -10,8 +10,6 @@ import pty
 import re
 import sys
 import socket
-import stat
-
 
 class SSHError(Exception):
     def __init__(self, value):
@@ -62,7 +60,7 @@ class SSH:
             tmp += self._read(f)
             got = tmp
         for tries in range(3):
-            m = re.search("Password:", got)
+            m = re.search("assword:", got)
             if m:
                 # send passwd
                 os.write(f, self.passwd + '\n')
@@ -103,6 +101,14 @@ def get_ip():
         print "%s does not appear to be a valid ip address." % ip
         ip = raw_input("Enter ip address of target machine: ")
     return ip
+
+# def ssh_keygen():
+#     id_rsa = "/Users/%s/.ssh/id_rsa" % user
+#     if os.path.isfile(id_rsa):
+#         # gen key from pre-existing id_rsa
+#     else:
+#         # need to gen id_rsa priv key
+
 
 if __name__ == "__main__":
     ip = get_ip()
