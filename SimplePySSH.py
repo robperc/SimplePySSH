@@ -13,8 +13,6 @@ import socket
 import subprocess
 import sys
 
-LocalOS = platform.system()
-
 class SSHError(Exception):
     def __init__(self, value):
         self.value = value
@@ -157,6 +155,7 @@ def get_local_user():
     return user
 
 def ssh_keygen(user):
+    LocalOS = platform.system()
     if LocalOS == 'Darwin':
         homedir = "/Users/"
     elif LocalOS == 'Linux':
