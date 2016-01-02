@@ -1,5 +1,5 @@
 # SimplePySSH
-Module for executing and reading output from simple shell commands on remote machines via SSH using only built-in modules.
+Lightweight module for executing and reading output from simple shell commands on remote machines via SSH using only built-in modules.
 
 Based on code from a blog post by Paul Mikesell (http://blog.clustrix.com/2012/01/31/scripting-ssh-with-python/)
 
