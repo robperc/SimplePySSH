@@ -28,10 +28,12 @@ class SSH:
     def run_cmd(self, c):
         (pid, f) = pty.fork()
         if pid == 0:
+	    # if sudo command then requires pseudo-tty allocation
             if c.startswith("sudo"):
                 os.execlp("/usr/bin/ssh", "ssh",
                     "-t", self.user + '@' + self.ip, c)
-            else:
+            # otherwise pseudo-tty not required
+	    else:
                 os.execlp("/usr/bin/ssh", "ssh",
                     self.user + '@' + self.ip, c)
         else:
