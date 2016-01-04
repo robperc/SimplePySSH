@@ -19,13 +19,14 @@ class SSHError(Exception):
     def __str__(self):
         return repr(self.value)
 
-class SSH: 
+class SSH:
     def __init__(self, ip, user, passwd):
         self.ip = ip
         self.passwd = passwd
         self.user = user
 
     def run_cmd(self, c):
+    	"""Run input command on remote machine via ssh in forked child process"""
         (pid, f) = pty.fork()
         if pid == 0:
 	    # if sudo command then requires pseudo-tty allocation
@@ -40,6 +41,7 @@ class SSH:
             return (pid, f)
 
     def _read(self, f):
+    	"""Read and return bytes from file descriptor. If byte string starts with "Connection to" return empty string."""
         x = ""
         try:
             x = os.read(f, 1024)
@@ -47,9 +49,12 @@ class SSH:
         except Exception, e:
             # this always fails with io error
             pass
+        # replace "Connection to x.x.x.x closed" lines from pseudo-tty allocated ssh sessions w/ empty string
         return x if not x.strip().startswith("Connection to") else ''
 
     def ssh_results(self, pid, f):
+    	"""Read and return output from file descriptor while waiting for completion of child process.
+    	Also responds to prompts for passwords and host authenticity."""
         output = ""
         got = self._read(f)
         m = re.search("authenticity of host", got)
@@ -89,10 +94,12 @@ class SSH:
         return output
 
     def cmd(self, c):
+    	"""Run input command on remote machine via ssh and return results"""
         (pid, f) = self.run_cmd(c)
         return self.ssh_results(pid, f)
 
     def set_key_auth(self, user, option):
+    	"""Add or remove key-based authentication for specified user to remote machine"""
         RemoteOS = self.cmd("uname").strip()
         if RemoteOS == 'Darwin':
             ssh_dir = "/private/var/root/.ssh"
@@ -109,6 +116,7 @@ class SSH:
             self.remove_auth_key(pub_key, contents, auth_keys)
 
     def get_auth_keys(self, ssh_dir, auth_keys):
+    	"""Return remote machines authorized public keys"""
         cmd = "sudo ls %s" % auth_keys
         out = self.cmd(cmd)
         m = re.search("such file or directory", out)
@@ -121,10 +129,12 @@ class SSH:
         return self.cmd(cmd)
 
     def write_auth_key(self, pub_key, auth_keys):
+    	"""Append public key to remote machines authorized public keys"""
         cmd = "sudo echo \"%s\" | sudo tee -a %s" % (pub_key, auth_keys)
         self.cmd(cmd)
 
     def remove_auth_key(self, pub_key, contents, auth_keys):
+    	"""Remove all instances of pub_key from remote machines authorized public keys"""
         contents = [key for key in contents.replace('\r', '').split('\n') if key not in ('', pub_key)]
         contents = '\n'.join(contents)
         cmd = "sudo echo \"%s\" | sudo tee %s" % (contents, auth_keys)
