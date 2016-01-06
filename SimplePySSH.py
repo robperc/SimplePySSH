@@ -147,10 +147,12 @@ class SSH:
         self.cmd(cmd)
 
 def ssh_cmd(ip, user, passwd, cmd):
+    """Create an SSH session using provided target ip and credentials, run cmd, and return output"""
     s = SSH(ip, user, passwd)
     return s.cmd(cmd)
 
 def valid_ip(address):
+    """Return True if address is a valid ip address, False otherwise."""
     try: 
         socket.inet_aton(address)
     except socket.error: 
@@ -159,6 +161,7 @@ def valid_ip(address):
         return address.count('.') == 3
 
 def get_ip():
+    """Prompt user to input ip address. Will continue to prompt until valid ip is entered."""
     ip = raw_input("Enter ip address of target machine: ")
     while not valid_ip(ip):
         print "%s does not appear to be a valid ip address." % ip
@@ -166,6 +169,8 @@ def get_ip():
     return ip
 
 def get_local_user():
+    """Return SUDO_USER env variable if set, otherwise return USER env variable
+    Used to find out which user called script when run using sudo user."""
     if os.environ.has_key('SUDO_USER'):
         user = os.environ['SUDO_USER']
     else:
@@ -173,6 +178,8 @@ def get_local_user():
     return user
 
 def ssh_keygen(user):
+    """Generate and return public key from id_rsa. If id_rsa doesn't exist then it is generated.
+    Raises ValueError if OS is not Mac or Linux."""
     LocalOS = platform.system()
     if LocalOS == 'Darwin':
         homedir = "/Users/"
@@ -188,6 +195,8 @@ def ssh_keygen(user):
     return pub_key
 
 def get_bool_yes_no(prompt):
+    """Prompts user with input prompt. Loops until user inputs either yes or no. 
+    Returns True if input is yes, False if no."""
     yes = set(['yes','y', 'ye', ''])
     no = set(['no','n'])
     choice = raw_input(prompt).lower()
