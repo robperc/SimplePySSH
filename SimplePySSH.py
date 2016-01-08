@@ -185,6 +185,7 @@ def ssh_keygen(user):
         homedir = "/Users/"
     elif LocalOS == 'Linux':
         homedir = "/home/"
+    # Only supports OS X and Linux currently
     else:
         raise ValueError('Unsupported OS on local machine: %s' % LocalOS)
     id_rsa = homedir + "%s/.ssh/id_rsa" % user
