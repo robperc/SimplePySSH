@@ -234,7 +234,7 @@ if __name__ == "__main__":
         result = ssh.cmd(cmd)
         print result
     # Optionally remove key-based authentication if it has been configured.
-    key_auth = get_bool_yes_no(prompt="Remove key-based authentication with remote machine? (y/n): ")
-    if key_auth:
+    rm_key_auth = get_bool_yes_no(prompt="Remove key-based authentication with remote machine? (y/n): ")
+    if rm_key_auth:
         ssh.set_key_auth(local_user, "remove")
 
