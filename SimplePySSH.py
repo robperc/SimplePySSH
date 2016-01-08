@@ -211,14 +211,20 @@ def get_bool_yes_no(prompt):
 
 
 if __name__ == "__main__":
+    # Get username of calling user if run as root
     local_user = get_local_user()
+    # Get user input
     ip = get_ip()
     user = raw_input("Enter target username: ")
     passwd = getpass.getpass(prompt="Enter the password for the target user: ")
+    # Create SSH session
     ssh = SSH(ip, user, passwd)
+    # Optionally set key-based authentication
     key_auth = get_bool_yes_no(prompt="Configure key-based authentication with remote machine? (y/n): ")
     if key_auth:
         ssh.set_key_auth(local_user, "add")
+    # Loop through prompting for commands to run until exit() is called
+    # If input commnad is empty string then skips
     while True:
         cmd = raw_input("Enter the command you wish to run on remote machine: ")
         if cmd == "exit()":
@@ -227,6 +233,7 @@ if __name__ == "__main__":
             continue
         result = ssh.cmd(cmd)
         print result
+    # Optionally remove key-based authentication if it has been configured.
     key_auth = get_bool_yes_no(prompt="Remove key-based authentication with remote machine? (y/n): ")
     if key_auth:
         ssh.set_key_auth(local_user, "remove")
