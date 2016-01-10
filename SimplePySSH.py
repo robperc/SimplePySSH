@@ -125,7 +125,7 @@ class SSH:
         cmd = "sudo ls %s" % auth_keys
         out = self.cmd(cmd)
         # if file doesn't exist then make file (and parent directory if needed)
-	m = re.search("such file or directory", out)
+        m = re.search("such file or directory", out)
         if m:
             cmd = "sudo mkdir -p %s" % ssh_dir
             self.cmd(cmd)
@@ -141,8 +141,11 @@ class SSH:
 
     def remove_auth_key(self, pub_key, contents, auth_keys):
     	"""Remove all instances of pub_key from remote machines authorized public keys"""
+        # Remove carriage returns, split contents on newline, and filter out empty string and string matching pub_key
         contents = [key for key in contents.replace('\r', '').split('\n') if key not in ('', pub_key)]
+        # Join the filter strings on newlines into a new string
         contents = '\n'.join(contents)
+        # Overwrite the authorized_keys file of the remote machine with the new filter contents string
         cmd = "sudo echo \"%s\" | sudo tee %s" % (contents, auth_keys)
         self.cmd(cmd)
 
