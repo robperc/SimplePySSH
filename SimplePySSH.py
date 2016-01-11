@@ -57,6 +57,7 @@ class SSH:
     	Also responds to prompts for passwords and host authenticity."""
         output = ""
         got = self._read(f)
+        # If prompted trust host authenticity
         m = re.search("authenticity of host", got)
         if m:
             os.write(f, 'yes\n') 
@@ -67,13 +68,14 @@ class SSH:
                 if m:
                     break
             got = self._read(f)
+        # Warnings are for dorks, write past them with newline
         m = re.search("Warning:", got)
         if m:
             os.write(f, '\n')
             tmp = self._read(f)
             tmp += self._read(f)
             got = tmp
-	# check for passwd request
+	    # check for passwd request
         for tries in range(3):
             m = re.search("assword:", got)
             if m:
@@ -87,6 +89,7 @@ class SSH:
                     raise Exception("Invalid username or passwd")
                 # passwd was accepted
                 got = tmp
+        # Append command output until it is empty
         while got and len(got) > 0:
             output += got
             got = self._read(f)
@@ -103,8 +106,8 @@ class SSH:
     	"""Add or remove key-based authentication for specified user to remote machine"""
         RemoteOS = self.cmd("uname").strip()
         # directory for authorized_keys file depends on OS
-	# only handles OS X, Linux for now
-	if RemoteOS == 'Darwin':
+	    # only handles OS X, Linux for now
+    	if RemoteOS == 'Darwin':
             ssh_dir = "/private/var/root/.ssh"
         elif RemoteOS == 'Linux':
             ssh_dir = "/root/.ssh"
@@ -113,10 +116,10 @@ class SSH:
         auth_keys = ssh_dir + "/authorized_keys"
         pub_key = ssh_keygen(user)
         contents = self.get_auth_keys(ssh_dir, auth_keys)
-	# add if add option specified and public key not in contents
+	    # add if add option specified and public key not in contents
         if option == 'add' and not pub_key in contents:
             self.write_auth_key(pub_key, auth_keys)
-	# remove if remove option specified and public key in contents
+	    # remove if remove option specified and public key in contents
         if option == 'remove' and pub_key in contents:
             self.remove_auth_key(pub_key, contents, auth_keys)
 
