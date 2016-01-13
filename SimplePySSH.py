@@ -29,8 +29,8 @@ class SSH:
     """ Holds the information needed to send shell commands to remote machines via SSH and receive output.
 
     Attributes:
-        ip (str): IP address of remote machine.
-        user (str): Username to use when connecting to remote machine.
+        ip (str): IP address of remote host.
+        user (str): Username to use when connecting to remote host.
         passwd (str): Password of remote user.
 
     """
@@ -41,7 +41,14 @@ class SSH:
         self.user = user
 
     def run_cmd(self, c):
-    	"""Run input command on remote machine via ssh in forked child process"""
+    	"""Run input command on remote machine via ssh in forked child process.
+
+        Args:
+            c (str): the shell command to run on the remote host.
+        Returns:
+            None if pid == 0.
+            pid and file descriptor of forked shell process otherwise.
+        """
         (pid, f) = pty.fork()
         if pid == 0:
 	    # if sudo command then requires pseudo-tty allocation
@@ -49,14 +56,21 @@ class SSH:
                 os.execlp("/usr/bin/ssh", "ssh",
                     "-t", self.user + '@' + self.ip, c)
             # otherwise pseudo-tty not required
-	    else:
+	        else:
                 os.execlp("/usr/bin/ssh", "ssh",
                     self.user + '@' + self.ip, c)
         else:
             return (pid, f)
 
     def _read(self, f):
-    	"""Read and return bytes from file descriptor. If byte string starts with "Connection to" return empty string."""
+    	"""Read and return bytes from file descriptor.
+           Filters bytes to remove strings that begin with "Connection to"
+
+        Args:
+            f (int): file descriptor to read from.
+        Returns:
+            First 1024 bytes read from f after filtering.
+        """
         x = ""
         try:
             x = os.read(f, 1024)
@@ -69,7 +83,14 @@ class SSH:
 
     def ssh_results(self, pid, f):
     	"""Read and return output from file descriptor while waiting for completion of child process.
-    	Also responds to prompts for passwords and host authenticity."""
+    	Also responds to prompts for passwords and host authenticity.
+
+        Args:
+            pid (int): pid of child process
+            f (int): file descriptor of child process.
+        Returns:
+            Output read from file descriptor of child process until it exits.
+        """
         output = ""
         got = self._read(f)
         # If prompted trust host authenticity
@@ -113,12 +134,25 @@ class SSH:
         return output
 
     def cmd(self, c):
-    	"""Run input command on remote machine via ssh and return results"""
+    	"""Read and return ouput from command run on remote host via ssh.
+
+        Args:
+            c (str): the shell command to run on the remote host.
+        Returns:
+            Full output of command run on remote host.
+        """
         (pid, f) = self.run_cmd(c)
         return self.ssh_results(pid, f)
 
     def set_key_auth(self, user, option):
-    	"""Add or remove key-based authentication for specified user to remote machine"""
+    	"""Add or remove key-based authentication for specified user to remote machine.
+
+        Args:
+            user (str): the local user to set key-based authorization to the remote host with.
+            option (str): option to add or remove key-based auth with remote host. One of ['add', 'remove'].
+        Raises:
+            ValueError: if OS is not supported.
+        """
         RemoteOS = self.cmd("uname").strip()
         # Directory for authorized_keys file depends on OS
 	    # Only handles OS X, Linux for now
@@ -140,7 +174,15 @@ class SSH:
             self.remove_auth_key(pub_key, contents, auth_keys)
 
     def get_auth_keys(self, ssh_dir, auth_keys):
-    	"""Return remote machines authorized public keys"""
+    	"""Return authorized public keys of remote host.
+        If the file doesn't exist it is created.
+
+        Args:
+            ssh_dir (str): the full path to the root '.ssh' directory of the remote host.
+            auth_keys (str): the full path to the root authorized_keys file of the remote host.
+        Returns:
+            Contents of the authorized_keys file of remote host
+        """
         cmd = "sudo ls %s" % auth_keys
         out = self.cmd(cmd)
         # if file doesn't exist then make file (and parent directory if needed)
@@ -154,12 +196,23 @@ class SSH:
         return self.cmd(cmd)
 
     def write_auth_key(self, pub_key, auth_keys):
-    	"""Append public key to remote machines authorized public keys"""
+    	"""Append public key to remote machines authorized public keys.
+
+        Args:
+            pub_key (str): the public key to write to authorized_keys file of remote host.
+            auth_keys (str): the full path to the root authorized_keys file of the remote host.
+        """
         cmd = "sudo echo \"%s\" | sudo tee -a %s" % (pub_key, auth_keys)
         self.cmd(cmd)
 
     def remove_auth_key(self, pub_key, contents, auth_keys):
-    	"""Remove all instances of pub_key from remote machines authorized public keys"""
+    	"""Remove all instances of pub_key from remote machines authorized public keys.
+
+        Args:
+            pub_key (str): the public key to remove from authorized_keys file of remote host.
+            contents (str): string contents of the authorized_keys file of remote host.
+            auth_keys (str): the full path to the root authorized_keys file of the remote host.
+        """
         # Remove carriage returns, split contents on newline, and filter out empty string and string matching pub_key
         contents = [key for key in contents.replace('\r', '').split('\n') if key not in ('', pub_key)]
         # Join the filter strings on newlines into a new string
@@ -169,7 +222,7 @@ class SSH:
         self.cmd(cmd)
 
 def ssh_cmd(ip, user, passwd, cmd):
-    """Create an SSH session using provided target ip and credentials, run cmd, and return output"""
+    """Create an SSH session using provided target ip and credentials, run cmd, and return output."""
     s = SSH(ip, user, passwd)
     return s.cmd(cmd)
 
