@@ -14,12 +14,27 @@ import subprocess
 import sys
 
 class SSHError(Exception):
+    """ Handles exceptions thrown by SSH class.
+
+    Attributes:
+        value (str): Human readable string describing the exception.
+
+    """
     def __init__(self, value):
         self.value = value
     def __str__(self):
         return repr(self.value)
 
 class SSH:
+    """ Holds the information needed to send shell commands to remote machines via SSH and receive output.
+
+    Attributes:
+        ip (str): IP address of remote machine.
+        user (str): Username to use when connecting to remote machine.
+        passwd (str): Password of remote user.
+
+    """
+
     def __init__(self, ip, user, passwd):
         self.ip = ip
         self.passwd = passwd
