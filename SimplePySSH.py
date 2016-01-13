@@ -105,12 +105,13 @@ class SSH:
     def set_key_auth(self, user, option):
     	"""Add or remove key-based authentication for specified user to remote machine"""
         RemoteOS = self.cmd("uname").strip()
-        # directory for authorized_keys file depends on OS
-	    # only handles OS X, Linux for now
+        # Directory for authorized_keys file depends on OS
+	    # Only handles OS X, Linux for now
     	if RemoteOS == 'Darwin':
             ssh_dir = "/private/var/root/.ssh"
         elif RemoteOS == 'Linux':
             ssh_dir = "/root/.ssh"
+        # Throw exception if OS not supported
         else:
             raise ValueError('Unsupported OS on remote machine: %s' % RemoteOS)
         auth_keys = ssh_dir + "/authorized_keys"
