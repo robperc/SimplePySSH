@@ -284,7 +284,7 @@ def get_bool_yes_no(prompt):
         return False
     else:
         print "Please enter yes or no"
-        return get_yes_no(prompt)
+        return get_bool_yes_no(prompt)
 
 
 if __name__ == "__main__":
