@@ -98,6 +98,10 @@ class SSH:
 		m = re.search("Operation timed out", got)
 		if m:
 			raise SSHError("No response from IP address %s." % self.ip)
+		# Raise exception if connection is refused by remote host
+		m = re.search("Connection refused", got)
+		if m:
+			raise SSHError("SSH connection refused by remote host.")
 		# If prompted trust host authenticity
 		m = re.search("authenticity of host", got)
 		if m:
