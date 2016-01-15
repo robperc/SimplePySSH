@@ -301,10 +301,9 @@ def get_bool_yes_no(prompt):
 		return get_bool_yes_no(prompt)
 
 def handler(signum, frame):
-	"""Handles SIGINT gracefully."""
+	"""Handles signals gracefully."""
 	print
 	sys.exit(0)
-
 
 if __name__ == "__main__":
 	# Configure graceful handler for signal interrupts
