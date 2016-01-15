@@ -123,7 +123,7 @@ class SSH:
 				tmp += self._read(f)
 				m = re.search("Permission denied", tmp)
 				if m:
-					raise Exception("Invalid username or passwd")
+					raise SSHError("Invalid username or passwd")
 				# passwd was accepted
 				got = tmp
 		# Append command output until it is empty
@@ -163,7 +163,7 @@ class SSH:
 			ssh_dir = "/root/.ssh"
 		# Throw exception if OS not supported
 		else:
-			raise ValueError('Unsupported OS on remote machine: %s' % RemoteOS)
+			raise SSHError('Unsupported OS on remote machine: %s' % RemoteOS)
 		auth_keys = ssh_dir + "/authorized_keys"
 		pub_key = ssh_keygen(user)
 		contents = self.get_auth_keys(ssh_dir, auth_keys)
