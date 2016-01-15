@@ -91,6 +91,10 @@ class SSH:
 			f (int): file descriptor of child process.
 		Returns:
 			Output read from file descriptor of child process until it exits.
+		Raises:
+			SSHError:   if there is no response from the target IP address
+						if SSH connection refused by remote host (IE: not enabled)
+						if remote username or password is invalid
 		"""
 		output = ""
 		got = self._read(f)
