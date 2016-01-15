@@ -94,6 +94,10 @@ class SSH:
 		"""
 		output = ""
 		got = self._read(f)
+		# Raise exception if operation times out due to no response from remote host
+		m = re.search("Operation timed out", got)
+		if m:
+			raise SSHError("No response from IP address %s." % self.ip)
 		# If prompted trust host authenticity
 		m = re.search("authenticity of host", got)
 		if m:
