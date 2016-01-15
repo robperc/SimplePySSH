@@ -10,6 +10,7 @@ import os
 import platform
 import pty
 import re
+import signal
 import socket
 import subprocess
 import sys
@@ -299,8 +300,15 @@ def get_bool_yes_no(prompt):
 		print "Please enter yes or no"
 		return get_bool_yes_no(prompt)
 
+def handler(signum, frame):
+	"""Handles SIGINT gracefully."""
+	print
+	sys.exit(0)
+
 
 if __name__ == "__main__":
+	# Configure graceful handler for signal interrupts
+	signal.signal(signal.SIGINT, handler)
 	# Parse args if there are any
 	parser = argparse.ArgumentParser(
 		description='Command line tool for running shell commands on remote hosts via SSH and capturing the output.',
@@ -315,8 +323,8 @@ if __name__ == "__main__":
 	# Get username of calling user if run as root
 	local_user = get_local_user()
 	# Get user input
-	ip = args.ip[0] if args.ip else get_ip()
-	user = args.user[0] if args.user else raw_input("Enter target username: ")
+	ip = args.ip[0] if args.ip else get_ip() # If there is a cmd line arg use it otherwise prompt user
+	user = args.user[0] if args.user else raw_input("Enter target username: ") # If there is a cmd line arg use it otherwise prompt user
 	passwd = getpass.getpass(prompt="Enter the password for the target user: ")
 	# Create SSH session
 	ssh = SSH(ip, user, passwd)
