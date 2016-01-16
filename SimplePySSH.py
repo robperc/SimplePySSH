@@ -159,6 +159,14 @@ class SSH:
 		(pid, f) = self.run_cmd(c)
 		return self.ssh_results(pid, f)
 
+	def push_dir(self, src, dst):
+		(pid, f) = pty.fork()
+		if pid == 0:
+			os.execlp("/usr/bin/scp", "scp", "-r", src,
+					  self.user + '@' + self.ip + ':' + dst)
+		else:
+			return (pid, f)
+
 	def push_file(self, src, dst):
 		(pid, f) = pty.fork()
 		if pid == 0:
