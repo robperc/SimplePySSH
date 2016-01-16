@@ -366,6 +366,7 @@ if __name__ == "__main__":
 			src = raw_input("Enter source file or directory you wish to transfer: ").strip()
 			dest = raw_input("Enter destination you wish to transfer source file or directory to: ").strip()
 			ssh.push(src, dest)
+			continue
 		elif cmd == '':
 			continue
 		result = ssh.cmd(cmd)
