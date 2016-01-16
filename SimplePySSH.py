@@ -159,6 +159,14 @@ class SSH:
 		(pid, f) = self.run_cmd(c)
 		return self.ssh_results(pid, f)
 
+	def push(self, src, dst):
+		s = os.stat(src)
+		if stat.S_ISDIR(s[stat.ST_MODE]):
+			(pid, f) = self.push_dir(src, dst)
+		else:
+			(pid, f) = self.push_file(src, dst)
+		return self.ssh_results(pid, f)
+
 	def push_dir(self, src, dst):
 		(pid, f) = pty.fork()
 		if pid == 0:
