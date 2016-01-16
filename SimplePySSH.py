@@ -12,6 +12,7 @@ import pty
 import re
 import signal
 import socket
+import stat
 import subprocess
 import sys
 
@@ -157,6 +158,14 @@ class SSH:
 		"""
 		(pid, f) = self.run_cmd(c)
 		return self.ssh_results(pid, f)
+
+	def push_file(self, src, dst):
+		(pid, f) = pty.fork()
+		if pid == 0:
+			os.execlp("/usr/bin/scp", "scp", src,
+					  self.user + '@' + self.ip + ':' + dst)
+		else:
+			return (pid, f)
 
 	def set_key_auth(self, user, option):
 		"""Add or remove key-based authentication for specified user to remote machine.
