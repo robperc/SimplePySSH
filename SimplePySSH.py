@@ -362,6 +362,10 @@ if __name__ == "__main__":
 		cmd = raw_input("Enter the command you wish to run on remote machine: ")
 		if cmd == "exit()":
 			break
+		elif cmd == "push()":
+			src = raw_input("Enter source file or directory you wish to transfer: ").strip()
+			dest = raw_input("Enter destination you wish to transfer source file or directory to: ").strip()
+			ssh.push(src, dest)
 		elif cmd == '':
 			continue
 		result = ssh.cmd(cmd)
