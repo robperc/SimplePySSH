@@ -69,6 +69,7 @@ Configure key-based authentication with remote machine? (y/n): n
 Enter the command you wish to run on remote machine: whoami
 
 	root
+
 Enter the command you wish to run on remote machine:
 ```
 Files and directories can also be pushed from the local host to the remote host using the "push()" command.
