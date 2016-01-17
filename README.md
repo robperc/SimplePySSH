@@ -69,7 +69,13 @@ Configure key-based authentication with remote machine? (y/n): n
 Enter the command you wish to run on remote machine: whoami
 
 	root
-
+Enter the command you wish to run on remote machine:
+```
+Files and directories can also be pushed from the local host to the remote host using the "push()" command.
+```
+Enter the command you wish to run on remote machine: push()
+Enter source file or directory you wish to transfer: /usr/local/bin/MyFile
+Enter destination you wish to transfer source file or directory to: /usr/local/bin
 Enter the command you wish to run on remote machine: exit()
 Remove key-based authentication with remote machine? (y/n): y
 $
