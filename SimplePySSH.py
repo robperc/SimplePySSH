@@ -177,6 +177,15 @@ class SSH:
 		return self.ssh_results(pid, f)
 
 	def push_dir(self, src, dst):
+		"""Push src directory to dst directory of remote host.
+
+		Args:
+			src (str): the path to the directory to push to remote host.
+			dst (str): the path to the directory to push to on remote host.
+		Returns:
+			None if pid == 0.
+			pid and file descriptor of forked shell process otherwise.
+		"""
 		(pid, f) = pty.fork()
 		if pid == 0:
 			os.execlp("/usr/bin/scp", "scp", "-r", src,
