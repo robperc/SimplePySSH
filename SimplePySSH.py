@@ -194,6 +194,15 @@ class SSH:
 			return (pid, f)
 
 	def push_file(self, src, dst):
+		"""Push src file to dst directory of remote host.
+
+		Args:
+			src (str): the path to the file to push to remote host from local host.
+			dst (str): the path to the directory to push to on remote host.
+		Returns:
+			None if pid == 0.
+			pid and file descriptor of forked shell process otherwise.
+		"""
 		(pid, f) = pty.fork()
 		if pid == 0:
 			os.execlp("/usr/bin/scp", "scp", src,
