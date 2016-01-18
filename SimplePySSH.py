@@ -160,6 +160,15 @@ class SSH:
 		return self.ssh_results(pid, f)
 
 	def push(self, src, dst):
+		"""Identify if src is a directory or a file and call appropriate
+		helper method to push it to dst of remote host.
+
+		Args:
+			src (str): the path to the directory or file to push to remote host.
+			dst (str): the path to the directory to push to on remote host.
+		Returns:
+			Output of copying directory or file to remote host (if any).
+		"""
 		s = os.stat(src)
 		if stat.S_ISDIR(s[stat.ST_MODE]):
 			(pid, f) = self.push_dir(src, dst)
