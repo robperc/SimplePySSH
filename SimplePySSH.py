@@ -77,7 +77,6 @@ class SSH:
 		x = ""
 		try:
 			x = os.read(f, 1024)
-
 		except Exception, e:
 			# this always fails with io error
 			pass
@@ -383,8 +382,9 @@ if __name__ == "__main__":
 	key_auth = get_bool_yes_no(prompt="Configure key-based authentication with remote machine? (y/n): ")
 	if key_auth:
 		ssh.set_key_auth(local_user, "add")
-	# Loop through prompting for commands to run until exit() is called
-	# If input commnad is empty string then skips
+	# Loop through prompting for commands to run until exit() is called.
+	# If input command is "push()" then prompts for directory or file to push to remote host.
+	# If input command is empty string then skips.
 	while True:
 		cmd = raw_input("Enter the command you wish to run on remote machine: ")
 		if cmd == "exit()":
@@ -402,4 +402,4 @@ if __name__ == "__main__":
 	rm_key_auth = get_bool_yes_no(prompt="Remove key-based authentication with remote machine? (y/n): ")
 	if rm_key_auth:
 		ssh.set_key_auth(local_user, "remove")
-
+		
