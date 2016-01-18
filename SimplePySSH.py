@@ -177,10 +177,10 @@ class SSH:
 		return self.ssh_results(pid, f)
 
 	def push_dir(self, src, dst):
-		"""Push src directory to dst directory of remote host.
+		"""Push src directory from local host to dst directory of remote host.
 
 		Args:
-			src (str): the path to the directory to push to remote host.
+			src (str): the path to the (local) directory to push to remote host.
 			dst (str): the path to the directory to push to on remote host.
 		Returns:
 			None if pid == 0.
@@ -197,7 +197,7 @@ class SSH:
 		"""Push src file from local host to dst directory of remote host.
 
 		Args:
-			src (str): the path to the file to push to remote host from local host.
+			src (str): the path to the (local) file to push to remote host.
 			dst (str): the path to the directory to push to on remote host.
 		Returns:
 			None if pid == 0.
