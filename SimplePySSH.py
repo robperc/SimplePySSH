@@ -194,7 +194,7 @@ class SSH:
 			return (pid, f)
 
 	def push_file(self, src, dst):
-		"""Push src file to dst directory of remote host.
+		"""Push src file from local host to dst directory of remote host.
 
 		Args:
 			src (str): the path to the file to push to remote host from local host.
