@@ -287,12 +287,28 @@ class SSH:
 		self.cmd(cmd)
 
 def ssh_cmd(ip, user, passwd, cmd):
-	"""Create an SSH session using provided target ip and credentials, run cmd, and return output."""
+	"""Create an SSH session using provided target ip and credentials, run cmd, and return output.
+
+	Args:
+		ip (str): the ip of remote host.
+		user (str): user to connect to remote host as.
+		passwd (str): password for user.
+		cmd (str): shell command to run on remote host.
+	Returns:
+		Output of shell command run on remote host.
+	"""
 	s = SSH(ip, user, passwd)
 	return s.cmd(cmd)
 
 def valid_ip(address):
-	"""Return True if address is a valid ip address, False otherwise."""
+	"""Return True if address is a valid ip address, False otherwise.
+
+	Args:
+		address (str): IP address to test validity of.
+	Returns:
+		True if address is a valid ip address.
+		False otherwise.
+	"""
 	try: 
 		socket.inet_aton(address)
 	except socket.error: 
