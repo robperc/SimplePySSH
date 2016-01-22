@@ -317,7 +317,11 @@ def valid_ip(address):
 		return address.count('.') == 3
 
 def get_ip():
-	"""Prompt user to input ip address. Will continue to prompt until valid ip is entered."""
+	"""Prompt user to input ip address. Will continue to prompt until valid ip is entered.
+
+	Returns:
+		Input IP address after validation.
+	"""
 	ip = raw_input("Enter ip address of target machine: ")
 	while not valid_ip(ip):
 		print "%s does not appear to be a valid ip address." % ip
