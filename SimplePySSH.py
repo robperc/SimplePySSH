@@ -329,8 +329,12 @@ def get_ip():
 	return ip
 
 def get_local_user():
-	"""Return SUDO_USER env variable if set, otherwise return USER env variable
-	Used to find out which user called script when run using sudo user."""
+	"""Find out which user called script when run using sudo user.
+
+	Returns:
+		SUDO_USER env variable if set.
+		USER env variable otherwise.
+	"""
 	# If called as sudo this will be set to the user who sudo'd
 	if os.environ.has_key('SUDO_USER'):
 		user = os.environ['SUDO_USER']
