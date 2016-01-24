@@ -345,7 +345,14 @@ def get_local_user():
 
 def ssh_keygen(user):
 	"""Generate and return public key from id_rsa. If id_rsa doesn't exist then it is generated.
-	Raises ValueError if OS is not Mac or Linux."""
+
+	Args:
+		user (str): Username of user to generate public key for.
+	Returns:
+		Public key generated from id_rsa.
+	Raises:
+		ValueError if OS is not Mac or Linux.
+	"""
 	LocalOS = platform.system()
 	if LocalOS == 'Darwin':
 		homedir = "/Users/"
