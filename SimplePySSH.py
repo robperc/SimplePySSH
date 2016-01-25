@@ -369,8 +369,14 @@ def ssh_keygen(user):
 	return pub_key
 
 def get_bool_yes_no(prompt):
-	"""Prompts user with input prompt. Loops until user inputs either yes or no. 
-	Returns True if input is yes, False if no."""
+	"""Prompts user until yes or no is entered.
+
+	Args:
+		prompt (str): Prompt to display to user.
+	Returns:
+		True if input is yes-y.
+		False if input is no-y.
+	"""
 	yes = set(['yes','y', 'ye'])
 	no = set(['no','n'])
 	choice = raw_input(prompt).lower()
