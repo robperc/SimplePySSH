@@ -51,6 +51,7 @@ class SSH:
 		Returns:
 			None if pid == 0.
 			pid and file descriptor of forked shell process otherwise.
+
 		"""
 		(pid, f) = pty.fork()
 		if pid == 0:
@@ -73,6 +74,7 @@ class SSH:
 			f (int): file descriptor to read from.
 		Returns:
 			First 1024 bytes read from f after filtering.
+			
 		"""
 		x = ""
 		try:
@@ -96,6 +98,7 @@ class SSH:
 			SSHError:   if there is no response from the target IP address
 						if SSH connection refused by remote host (IE: not enabled)
 						if remote username or password is invalid
+
 		"""
 		output = ""
 		got = self._read(f)
@@ -154,6 +157,7 @@ class SSH:
 			c (str): the shell command to run on the remote host.
 		Returns:
 			Full output of command run on remote host.
+
 		"""
 		(pid, f) = self.run_cmd(c)
 		return self.ssh_results(pid, f)
@@ -167,6 +171,7 @@ class SSH:
 			dst (str): the path to the directory to push to on remote host.
 		Returns:
 			Output of copying directory or file to remote host (if any).
+
 		"""
 		s = os.stat(src)
 		if stat.S_ISDIR(s[stat.ST_MODE]):
@@ -184,6 +189,7 @@ class SSH:
 		Returns:
 			None if pid == 0.
 			pid and file descriptor of forked shell process otherwise.
+
 		"""
 		(pid, f) = pty.fork()
 		if pid == 0:
@@ -201,6 +207,7 @@ class SSH:
 		Returns:
 			None if pid == 0.
 			pid and file descriptor of forked shell process otherwise.
+
 		"""
 		(pid, f) = pty.fork()
 		if pid == 0:
@@ -217,6 +224,7 @@ class SSH:
 			option (str): option to add or remove key-based auth with remote host. One of ['add', 'remove'].
 		Raises:
 			ValueError: if OS is not supported.
+
 		"""
 		RemoteOS = self.cmd("uname").strip()
 		# Directory for authorized_keys file depends on OS
@@ -246,7 +254,8 @@ class SSH:
 			ssh_dir (str): the full path to the root '.ssh' directory of the remote host.
 			auth_keys (str): the full path to the root authorized_keys file of the remote host.
 		Returns:
-			Contents of the authorized_keys file of remote host
+			Contents of the authorized_keys file of remote host.
+
 		"""
 		cmd = "sudo ls %s" % auth_keys
 		out = self.cmd(cmd)
@@ -266,6 +275,7 @@ class SSH:
 		Args:
 			pub_key (str): the public key to write to authorized_keys file of remote host.
 			auth_keys (str): the full path to the root authorized_keys file of the remote host.
+
 		"""
 		cmd = "sudo echo \"%s\" | sudo tee -a %s" % (pub_key, auth_keys)
 		self.cmd(cmd)
@@ -277,6 +287,7 @@ class SSH:
 			pub_key (str): the public key to remove from authorized_keys file of remote host.
 			contents (str): string contents of the authorized_keys file of remote host.
 			auth_keys (str): the full path to the root authorized_keys file of the remote host.
+
 		"""
 		# Remove carriage returns, split contents on newline, and filter out empty string and string matching pub_key
 		contents = [key for key in contents.replace('\r', '').split('\n') if key not in ('', pub_key)]
@@ -296,6 +307,7 @@ def ssh_cmd(ip, user, passwd, cmd):
 		cmd (str): shell command to run on remote host.
 	Returns:
 		Output of shell command run on remote host.
+
 	"""
 	s = SSH(ip, user, passwd)
 	return s.cmd(cmd)
@@ -308,6 +320,7 @@ def valid_ip(address):
 	Returns:
 		True if address is a valid ip address.
 		False otherwise.
+
 	"""
 	try: 
 		socket.inet_aton(address)
@@ -321,6 +334,7 @@ def get_ip():
 
 	Returns:
 		Input IP address after validation.
+
 	"""
 	ip = raw_input("Enter ip address of target machine: ")
 	while not valid_ip(ip):
@@ -334,6 +348,7 @@ def get_local_user():
 	Returns:
 		SUDO_USER env variable if set.
 		USER env variable otherwise.
+
 	"""
 	# If called as sudo this will be set to the user who sudo'd
 	if os.environ.has_key('SUDO_USER'):
@@ -352,6 +367,7 @@ def ssh_keygen(user):
 		Public key generated from id_rsa.
 	Raises:
 		ValueError if OS is not Mac or Linux.
+
 	"""
 	LocalOS = platform.system()
 	if LocalOS == 'Darwin':
@@ -376,6 +392,7 @@ def get_bool_yes_no(prompt):
 	Returns:
 		True if input is yes-y.
 		False if input is no-y.
+
 	"""
 	yes = set(['yes','y', 'ye'])
 	no = set(['no','n'])
@@ -389,7 +406,9 @@ def get_bool_yes_no(prompt):
 		return get_bool_yes_no(prompt)
 
 def handler(signum, frame):
-	"""Handles signals gracefully."""
+	"""Handles signals gracefully.
+
+	"""
 	print
 	sys.exit(0)
 
