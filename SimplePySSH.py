@@ -17,7 +17,8 @@ import subprocess
 import sys
 
 class SSHError(Exception):
-	""" Handles exceptions thrown by SSH class.
+	"""
+	Handles exceptions thrown by SSH class.
 
 	Attributes:
 		value (str): Human readable string describing the exception.
@@ -29,7 +30,8 @@ class SSHError(Exception):
 		return repr(self.value)
 
 class SSH:
-	""" Holds the information needed to send shell commands to remote machines via SSH and receive output.
+	"""
+	Holds the information needed to send shell commands to remote machines via SSH and receive output.
 
 	Attributes:
 		ip (str): IP address of remote host.
@@ -44,7 +46,8 @@ class SSH:
 		self.user = user
 
 	def run_cmd(self, c):
-		"""Run input command on remote machine via ssh in forked child process.
+		"""
+		Run input command on remote machine via ssh in forked child process.
 
 		Args:
 			c (str): the shell command to run on the remote host.
@@ -67,7 +70,8 @@ class SSH:
 			return (pid, f)
 
 	def _read(self, f):
-		"""Read and return bytes from file descriptor.
+		"""
+		Read and return bytes from file descriptor.
 		   Filters bytes to remove strings that begin with "Connection to"
 
 		Args:
@@ -86,7 +90,8 @@ class SSH:
 		return x if not x.strip().startswith("Connection to") else ''
 
 	def ssh_results(self, pid, f):
-		"""Read and return output from file descriptor while waiting for completion of child process.
+		"""
+		Read and return output from file descriptor while waiting for completion of child process.
 		Also responds to prompts for passwords and host authenticity.
 
 		Args:
@@ -151,7 +156,8 @@ class SSH:
 		return output
 
 	def cmd(self, c):
-		"""Read and return ouput from command run on remote host via ssh.
+		"""
+		Read and return ouput from command run on remote host via ssh.
 
 		Args:
 			c (str): the shell command to run on the remote host.
@@ -163,7 +169,8 @@ class SSH:
 		return self.ssh_results(pid, f)
 
 	def push(self, src, dst):
-		"""Identify if src is a directory or a file on local host and call appropriate
+		"""
+		Identify if src is a directory or a file on local host and call appropriate
 		helper method to push it to dst of remote host.
 
 		Args:
@@ -181,7 +188,8 @@ class SSH:
 		return self.ssh_results(pid, f)
 
 	def push_dir(self, src, dst):
-		"""Push src directory from local host to dst directory of remote host.
+		"""
+		Push src directory from local host to dst directory of remote host.
 
 		Args:
 			src (str): the path to the (local) directory to push to remote host.
@@ -199,7 +207,8 @@ class SSH:
 			return (pid, f)
 
 	def push_file(self, src, dst):
-		"""Push src file from local host to dst directory of remote host.
+		"""
+		Push src file from local host to dst directory of remote host.
 
 		Args:
 			src (str): the path to the (local) file to push to remote host.
@@ -217,7 +226,8 @@ class SSH:
 			return (pid, f)
 
 	def set_key_auth(self, user, option):
-		"""Add or remove key-based authentication for specified user to remote machine.
+		"""
+		Add or remove key-based authentication for specified user to remote machine.
 
 		Args:
 			user (str): the local user to set key-based authorization to the remote host with.
@@ -247,7 +257,8 @@ class SSH:
 			self.remove_auth_key(pub_key, contents, auth_keys)
 
 	def get_auth_keys(self, ssh_dir, auth_keys):
-		"""Return authorized public keys of remote host.
+		"""
+		Return authorized public keys of remote host.
 		If the file doesn't exist it is created.
 
 		Args:
@@ -270,7 +281,8 @@ class SSH:
 		return self.cmd(cmd)
 
 	def write_auth_key(self, pub_key, auth_keys):
-		"""Append public key to remote machines authorized public keys.
+		"""
+		Append public key to remote machines authorized public keys.
 
 		Args:
 			pub_key (str): the public key to write to authorized_keys file of remote host.
@@ -281,7 +293,8 @@ class SSH:
 		self.cmd(cmd)
 
 	def remove_auth_key(self, pub_key, contents, auth_keys):
-		"""Remove all instances of pub_key from remote machines authorized public keys.
+		"""
+		Remove all instances of pub_key from remote machines authorized public keys.
 
 		Args:
 			pub_key (str): the public key to remove from authorized_keys file of remote host.
@@ -298,7 +311,8 @@ class SSH:
 		self.cmd(cmd)
 
 def ssh_cmd(ip, user, passwd, cmd):
-	"""Create an SSH session using provided target ip and credentials, run cmd, and return output.
+	"""
+	Create an SSH session using provided target ip and credentials, run cmd, and return output.
 
 	Args:
 		ip (str): the ip of remote host.
@@ -313,7 +327,8 @@ def ssh_cmd(ip, user, passwd, cmd):
 	return s.cmd(cmd)
 
 def valid_ip(address):
-	"""Return True if address is a valid ip address, False otherwise.
+	"""
+	Return True if address is a valid ip address, False otherwise.
 
 	Args:
 		address (str): IP address to test validity of.
@@ -330,7 +345,8 @@ def valid_ip(address):
 		return address.count('.') == 3
 
 def get_ip():
-	"""Prompt user to input ip address. Will continue to prompt until valid ip is entered.
+	"""
+	Prompt user to input ip address. Will continue to prompt until valid ip is entered.
 
 	Returns:
 		Input IP address after validation.
@@ -343,7 +359,8 @@ def get_ip():
 	return ip
 
 def get_local_user():
-	"""Find out which user called script when run using sudo user.
+	"""
+	Find out which user called script when run using sudo user.
 
 	Returns:
 		SUDO_USER env variable if set.
@@ -359,7 +376,8 @@ def get_local_user():
 	return user
 
 def ssh_keygen(user):
-	"""Generate and return public key from id_rsa. If id_rsa doesn't exist then it is generated.
+	"""
+	Generate and return public key from id_rsa. If id_rsa doesn't exist then it is generated.
 
 	Args:
 		user (str): Username of user to generate public key for.
@@ -385,7 +403,8 @@ def ssh_keygen(user):
 	return pub_key
 
 def get_bool_yes_no(prompt):
-	"""Prompts user until yes or no is entered.
+	"""
+	Prompts user until yes or no is entered.
 
 	Args:
 		prompt (str): Prompt to display to user.
@@ -406,7 +425,8 @@ def get_bool_yes_no(prompt):
 		return get_bool_yes_no(prompt)
 
 def handler(signum, frame):
-	"""Handles signals gracefully.
+	"""
+	Handles signals gracefully.
 
 	"""
 	print
