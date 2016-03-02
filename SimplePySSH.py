@@ -387,14 +387,14 @@ def ssh_keygen(user):
 		ValueError if OS is not Mac or Linux.
 
 	"""
-	LocalOS = platform.system()
-	if LocalOS == 'Darwin':
+	localOS = platform.system()
+	if localOS == 'Darwin':
 		homedir = "/Users/"
-	elif LocalOS == 'Linux':
+	elif localOS == 'Linux':
 		homedir = "/home/"
 	# Only supports OS X and Linux currently
 	else:
-		raise ValueError('Unsupported OS on local machine: %s' % LocalOS)
+		raise ValueError('Unsupported OS on local machine: %s' % localOS)
 	id_rsa = homedir + "%s/.ssh/id_rsa" % user
 	if os.path.isfile(id_rsa):
 		pub_key = subprocess.check_output(["ssh-keygen", "-y", "-f", id_rsa]).strip()
